@@ -1,0 +1,10 @@
+≈‰÷√√˚≥∆,≈‰÷√÷µ
+connectionMode,udp
+tcpPort,9000
+udpPort,7000
+httpPort,8000
+comPath,COM1
+comBaudRate,115200
+comDataBits,8
+comParity,none
+comStopBits,2

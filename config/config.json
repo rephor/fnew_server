@@ -1,0 +1,28 @@
+{
+  "static": {
+    "port": 80,
+    "refresh": [
+      "/home",
+      "/login"
+    ],
+    "assert": {
+      "upload": "/upload/"
+    },
+    "csvpath": "./config/"
+  },
+  "udp": {
+    "port": 6666,
+    "timeout": 1000
+  },
+  "tcp": {
+    "timeout": 1000,
+    "heartbeat": 30000
+  },
+  "com": {
+    "timeout": 1000
+  },
+  "http": {
+    "timeout": 5000
+  },
+  "showId": false
+}

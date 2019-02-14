@@ -1,0 +1,21 @@
+{
+  "appenders": {
+    "daily": {
+      "type": "dateFile",
+      "filename": "log/logger",
+      "pattern": "-yyyy-MM-dd"
+    },
+    "console": {
+      "type": "console"
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": [
+        "daily",
+        "console"
+      ],
+      "level": "DEBUG"
+    }
+  }
+}

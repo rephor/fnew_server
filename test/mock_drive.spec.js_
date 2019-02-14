@@ -1,0 +1,73 @@
+import { onConfigChange } from "../src/sbi/common/link/link"
+import { getDebugParameter, getDeviceId, getOrdinaryParameter, rollback, getParameter, setParameter, upgrade } from "../src/sbi/protocol"
+import { DataType, LinkType, Parameter } from "../src/common/define"
+import { configure } from "log4js"
+import axios from "axios"
+
+const SELF_IP = '127.0.0.1'
+const DEVICE_ID = '12345'
+const CONFIG = {
+    connectionMode: LinkType.com,
+    httpPort: 8000,
+    tcpPort: 4000,
+    udpPort: 7000,
+    comPath: 'COM3',
+    comBaudRate: 115200,
+    comDataBits: 8,
+    comParity: 'none',
+    comStopBits: 1
+}
+
+describe('package test suit', () => {
+    beforeAll(() => {
+        onConfigChange(CONFIG)
+        configure('config/log4js.json')
+    })
+
+    it('test getDeviceId', async () => {
+        const deviceId = await getDeviceId(SELF_IP)
+        expect(deviceId).toEqual('12345')
+    })
+
+    it('test getOrdinaryParameter', async () => {
+        const response = await getOrdinaryParameter(SELF_IP, DEVICE_ID)
+        expect(response).toEqual([1, 2, 3, 4])
+    })
+
+    it('test getDebugParameter', async () => {
+        const response = await getDebugParameter(SELF_IP, DEVICE_ID)
+        expect(response).toEqual([3072, 3073, 3074])
+    })
+
+    it('test rollback', async () => {
+        const response = await rollback(SELF_IP, DEVICE_ID)
+        expect(response).toEqual(true)
+    })
+
+    it('test getParameter', async () => {
+        const parameterList = []
+        parameterList.push(new Parameter(2, DataType.uint8, null))
+        parameterList.push(new Parameter(0xc01, DataType.uint8, null))
+        const response = await getParameter(SELF_IP, DEVICE_ID, parameterList)
+        expect(response).toEqual(true)
+    })
+
+    it('test setParameter', async () => {
+        const parameterList = []
+        parameterList.push(new Parameter(2, DataType.uint8, 90))
+        parameterList.push(new Parameter(0xc01, DataType.uint8, 100))
+        const response = await setParameter(SELF_IP, DEVICE_ID, parameterList)
+        expect(response).toEqual([])
+    })
+
+    it('test upgrade', async () => {
+        const fs = require('fs')
+        const fileBuffer = Buffer.alloc(1024 * 1024)
+        const fd = fs.openSync('test/version.so', 'r')
+        const red = fs.readSync(fd, fileBuffer, 0, 1024 * 1024, null)
+        axios.post = jest.fn().mockReturnValueOnce(Promise.resolve({status: 200}))
+
+        const ret = await upgrade(SELF_IP, fileBuffer.slice(0, red))
+        expect(ret).toEqual(true)
+    })
+})

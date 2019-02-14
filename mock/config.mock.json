@@ -1,0 +1,21 @@
+{
+  "connect": "udp",
+  "udp": {
+    "port": 7000
+  },
+  "tcp": {
+    "host": "127.0.0.1",
+    "port": 9000,
+    "heartbeat": 20000
+  },
+  "com": {
+    "path": "COM4",
+    "baudRate": 115200,
+    "dataBits": 8,
+    "parity": "none",
+    "stopBits": 1
+  },
+  "http": {
+    "port": 8000
+  }
+}
